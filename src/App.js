@@ -1,10 +1,10 @@
 import './app.scss';
-import Form from './Form';
+import CactomForm from './Form';
 
 function App() {
   return (
     <div className="app">
-        <Form/>
+        <CactomForm/>
     </div>
   );
 }
