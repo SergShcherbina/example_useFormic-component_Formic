@@ -1,5 +1,32 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useField } from 'formik';
 import * as Yup from 'yup';                                                  //импорт всех сущностей библиотеки
+
+const MyTextInput = ({label, ...props}) => {                                 //компонент по замене однотипных инпутов+label
+    const[field, meta] = useField(props)                                     //получаем все проперти из <Formic> через Context
+    //! field -это value, onChange, onBluer
+    //! meta -это error, touched
+    return (
+        <>
+            <label htmlFor={props.name}>{label}</label>
+            <input {...props} {...field} />  
+            {meta.touched && meta.error ? (<div className='error'>{meta.error}</div>) : null}             
+        </>
+    )
+};
+
+// const MyTextCheck = ({label, ...props}) => {                                 //компонент по замене однотипных checkbox
+//     const[field, meta] = useField({...props, type: 'checkbox'})              //получаем все проперти из <Formic> и тип элемента
+
+//     return (
+//         <>
+//             <label className='checkbox' >
+//                 <input type="checkbox" {...props} {...field} />  
+//                 {label}
+//             </label>
+//             {meta.touched && meta.error ? (<div className='error'>{meta.error}</div>) : null}             
+//         </>
+//     )
+// };
 
 const CactomForm = () => {
 
@@ -31,32 +58,26 @@ const CactomForm = () => {
             })}
             onSubmit = {values => console.log(JSON.stringify(values, null, 2))} //выводим именно строку 
             >
-            <form className="form" >
+            <Form className="form" >
                 <h2>Отправить пожертвование</h2>
-                <label htmlFor="name">Ваше имя</label>
-                <Field
+                <MyTextInput                                                   //передаем в компоненты пропсы
+                    label='Ваше имя'
                     id="name"
                     name="name"
                     type="text"
                 />
-                <ErrorMessage className='error' name='name' component='div'/> 
-
-                <label htmlFor="email">Ваша почта</label>
-                <Field
+                <MyTextInput
+                    label='Ваша почта'
                     id="email"
                     name="email"
                     type="email"
-                />
-                <ErrorMessage className='error' name='email' component='div'/>  
-
-                <label htmlFor="amount">Количество</label>
-                <Field
+                />                
+                <MyTextInput
+                    label='Количество'
                     id="amount"
                     name="amount"
                     type="number"
                 />
-                <ErrorMessage className='error' name='amount' component='div'/> 
-                
                 <label htmlFor="currency">Валюта</label>
                 <Field
                     id="currency"
@@ -69,7 +90,6 @@ const CactomForm = () => {
                         <option value="RUB">RUB</option>
                 </Field>
                 <ErrorMessage className='error' name='currency' component='div'/>
-
                 <label htmlFor="text">Ваше сообщение</label>
                 <Field 
                     id="text"
@@ -77,7 +97,6 @@ const CactomForm = () => {
                     as='textarea' 
                 />
                 <ErrorMessage className='error' name='text' component='div'/>
-
                 <label className="checkbox">
                     <Field 
                         name="terms" 
@@ -85,10 +104,9 @@ const CactomForm = () => {
                     />
                     Соглашаетесь с политикой конфиденциальности?
                 </label>
-                <ErrorMessage className='error' name='terms' component='div'/>
-
+                <ErrorMessage className='error' name='terms' component='div'/>                
                 <button type="submit">Отправить</button>
-            </form>
+            </Form>
         </Formik>
     )
 }
